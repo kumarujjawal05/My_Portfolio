@@ -3,13 +3,26 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { nanoid } from 'nanoid';
 import otpGenerator from 'otp-generator';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const publicDir = path.join(__dirname, '..', 'public');
 
 const app = express();
 app.use(helmet());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(publicDir));
+
+// Serve index explicitly at root
+app.get('/', (_req, res) => {
+  res.sendFile(path.join(publicDir, 'index.html'));
+});
+// Optional: handle favicon quickly
+app.get('/favicon.ico', (_req, res) => res.sendStatus(204));
 
 // Simple in-memory stores (production: use Redis/DB)
 const otpStore = new Map(); // key: sessionId, value: { phone, otp, expiresAt }
@@ -27,7 +40,7 @@ app.post('/api/start', async (req, res) => {
     return res.status(400).json({ error: 'Provide phone in E.164 format, e.g., +15555555555' });
   }
   const sessionId = nanoid(16);
-  const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, alphabets: false, digits: true });
+  const otp = String(Math.floor(100000 + Math.random() * 900000));
   const expiresAt = Date.now() + 1000 * 60 * 3; // 3 minutes
   otpStore.set(sessionId, { phone, otp, expiresAt });
 
