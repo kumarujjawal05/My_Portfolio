@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: portfolio-otp-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        value: https://<your-username>.github.io
+      # Optional: set Twilio to enable SMS sending; otherwise logs OTP in server logs
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM
+        sync: false

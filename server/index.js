@@ -1,5 +1,6 @@
 import express from 'express';
 import helmet from 'helmet';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import { nanoid } from 'nanoid';
 import otpGenerator from 'otp-generator';
@@ -15,6 +16,10 @@ const publicDir = path.join(__dirname, '..', 'public');
 const app = express();
 app.use(helmet());
 app.use(express.json());
+
+// Allow CORS for GitHub Pages origin or all if not set
+const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+app.use(cors({ origin: CORS_ORIGIN === '*' ? true : CORS_ORIGIN }));
 app.use(express.static(publicDir));
 
 // Serve index explicitly at root
