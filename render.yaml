@@ -11,7 +11,7 @@ services:
       - key: PORT
         value: 10000
       - key: CORS_ORIGIN
-        value: https://<your-username>.github.io
+        value: https://kumarujjawal05.github.io
       # Optional: set Twilio to enable SMS sending; otherwise logs OTP in server logs
       - key: TWILIO_ACCOUNT_SID
         sync: false
